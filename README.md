@@ -23,7 +23,7 @@ This application provides a secure, end-to-end encrypted chat platform where use
 2. Install dependencies:
 
    ```bash
-   cd encrypted-realtime-chat
+   cd efimero 
    npm install
    ```
 
@@ -35,7 +35,7 @@ This application provides a secure, end-to-end encrypted chat platform where use
    npm start
    ```
 
-2. Access the application via `http://localhost:3000` in your browser.
+2. Access the application via `http://localhost:5173` in your browser.
 
 ## Usage Guide
 

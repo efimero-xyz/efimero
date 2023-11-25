@@ -1,0 +1,34 @@
+name: Deployment
+on:
+  push:
+    branches:
+      - main 
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 18.x
+    - name: Create .env.production
+      run: |
+        cat << EOF > .env
+        VITE_WS_URL=${{ env.WS_URL}}
+        VITE_HOMEPAGE=${{ env.HOMEPAGE }}
+        EOF
+
+    - name: Install Packages
+      run: npm install
+    - name: Build page
+      run: npm run build
+    - name: Deploy to gh-pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./build
