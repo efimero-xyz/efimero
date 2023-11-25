@@ -18,7 +18,7 @@ jobs:
         node-version: 18.x
     - name: Create .env.production
       run: |
-        cat << EOF > .env
+        cat << EOF > .env.production
         VITE_WS_URL=${{ env.WS_URL}}
         VITE_HOMEPAGE=${{ env.HOMEPAGE }}
         EOF
