@@ -19,8 +19,8 @@ jobs:
     - name: Create .env.production
       run: |
         cat << EOF > .env.production
-        VITE_WS_URL=${{ env.WS_URL}}
-        VITE_HOMEPAGE=${{ env.HOMEPAGE }}
+        VITE_WS_URL=${{ secrets.WS_URL}}
+        VITE_HOMEPAGE=${{ secrets.HOMEPAGE }}
         EOF
 
     - name: Install Packages
