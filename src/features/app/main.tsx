@@ -24,7 +24,8 @@ export default function App () {
       setIsConnected(false)
     }
 
-    async function onChatMessage (value: ArrayBuffer, iv: Uint8Array) {
+    async function onChatMessage (value: ArrayBuffer, ivB: ArrayBuffer) {
+      const iv = new Uint8Array(ivB)
       if (value instanceof ArrayBuffer && iv instanceof Uint8Array) {
         try {
           const decoded = await decryptData(value, iv)
