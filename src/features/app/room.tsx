@@ -1,5 +1,4 @@
 import { useParams } from 'react-router-dom'
-import { socket } from './socket'
 import * as React from 'react'
 import { DotFilledIcon, PaperPlaneIcon, PersonIcon } from '@radix-ui/react-icons'
 import {
@@ -16,6 +15,7 @@ import { useEe2e } from '@/ee2e/provider'
 import { type MessageSchemaType, createMessage, serializeMessage } from './message.schema'
 import { ModeToggle } from '@/components/mode-toggle'
 import { type FormEvent, useRef } from 'react'
+import { useSocket } from '@/ee2e/socket'
 
 function MessageElement ({ message }: { message: MessageSchemaType }): React.ReactNode { 
   const getTime = (timestamp: number) => {
@@ -48,11 +48,13 @@ const roomData = {
 }
 
 interface AppRoomProps {
+  username: string
   messages: MessageSchemaType[]
   isConnected: boolean
   users: string[]
 }
-export function AppRoom ({ messages, isConnected, users }: AppRoomProps) {
+export function AppRoom ({ messages, users, username }: AppRoomProps) {
+  const { socket, isConnected } = useSocket()
   const { number } = useParams()
   const refMessages = useRef<HTMLDivElement>(null)
   const { encryptData } = useEe2e()
@@ -64,14 +66,16 @@ export function AppRoom ({ messages, isConnected, users }: AppRoomProps) {
     event.preventDefault()
     if (inputLength === 0) return
 
-    const message = createMessage('username', input)
+    const message = createMessage(username, input)
     const message2string = serializeMessage(message)
     const encrypted = await encryptData(message2string)
 
-    socket.timeout(1000).emit('server-broadcast', number, encrypted.data, encrypted.iv, () => {
-      //setIsLoading(false)
-    })
-    setInput('')
+    if (socket !== undefined && isConnected) {
+      socket.timeout(1000).emit('server-broadcast', number, encrypted.data, encrypted.iv, () => {
+        //setIsLoading(false)
+      })
+      setInput('')
+    }
   }
 
   React.useEffect(() => {
@@ -107,7 +111,7 @@ export function AppRoom ({ messages, isConnected, users }: AppRoomProps) {
               <div ref={refMessages} className="space-y-4 flex-grow w-full overflow-y-scroll px-4 pt-2 bg-card">
                 {messages.map((message, index) => (
                   <MessageElement message={message} key={index} />
-                  ))}
+                ))}
               </div>
             <form
                 onSubmit={onSubmit}
@@ -121,7 +125,7 @@ export function AppRoom ({ messages, isConnected, users }: AppRoomProps) {
                   value={input}
                   onChange={(event) => { setInput(event.target.value) }}
                   />
-                <Button type="submit" size="icon" disabled={inputLength === 0}>
+                <Button type="submit" size="icon" disabled={inputLength === 0 || !isConnected}>
                   <PaperPlaneIcon className="h-4 w-4" />
                   <span className="sr-only">Send</span>
                 </Button>
@@ -152,7 +156,6 @@ export function AppRoom ({ messages, isConnected, users }: AppRoomProps) {
                 <PersonIcon className='h-4 w-4 mr-2'/><p className="text-md font-medium leading-none "> Disconected</p>
               </div>
               <div className='flex w-full p-4'></div>
-              <p className="text-md font-medium leading-none">Disconected</p>
 
               <div className='flex flex-grow'>
               </div>
