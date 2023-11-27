@@ -1,5 +1,4 @@
-import { io } from 'socket.io-client'
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useState } from 'react'
 
 const nameList = [
   'Time', 'Past', 'Future', 'Dev',

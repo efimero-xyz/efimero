@@ -59,7 +59,7 @@ export default function App () {
 
   return (
     <div className='h-screen w-full overflow-hidden grid grid-cols-1 lg:grid-cols-[300px_1fr]'>
-      <SidePanel isConnected={ isConnected } username={username} />
+      <SidePanel isConnected={ isConnected } />
       <AppRoom isConnected={ isConnected } messages={ chatMessages } users={users} username={username}/>
     </div>
   )
