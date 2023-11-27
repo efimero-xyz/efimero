@@ -187,7 +187,3 @@ export function SidePanel (props: SidePanelProps) {
     </div>
   )
 }
-function useSesion(): { username: any } {
-  throw new Error('Function not implemented.')
-}
-
